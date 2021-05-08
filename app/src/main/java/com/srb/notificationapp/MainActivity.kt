@@ -18,7 +18,8 @@ class MainActivity : AppCompatActivity() {
 
     private val CHANNEL_ID = "channelId"
     private val CHANNEL_Name = "channelName"
-    private val NOTIFICATION_ID : Int = 0
+    private val NOTIFICATION_ID: Int = 0
+    private val ACTION_SNOOZE = "com.srb.notificationapp.ACTION_SNOOZE"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,27 +29,45 @@ class MainActivity : AppCompatActivity() {
 
         createNotificationChannel()
 
-        val intent = Intent(this,MainActivity::class.java).apply {
+//===================used if there's no button==================================//
+        val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
 
-        val notification = NotificationCompat.Builder(this,CHANNEL_ID)
+//===================used to show buttons in notification==================================//
+        val snoozeIntent = Intent(this, MyBroadcastReceiver::class.java).apply {
+            action = ACTION_SNOOZE
+            putExtra(CHANNEL_ID, 0)
+        }
+        val snoozePendingIntent: PendingIntent =
+            PendingIntent.getBroadcast(this, 0, snoozeIntent, 0)
+
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Example")
+            //if style is there this won't be shown , text will be displayed only of one line
             .setContentText("sample text")
             .setSmallIcon(R.drawable.ic_baseline_anchor_24)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)              //sets the notification to top if two notifications comes at the same time and the other one has low priority
+            //text can be displayed of multiple lines
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText("this is big text following the second line as well let's see what happens")
+            )
+            //sets the notification to top if two notifications comes at the same time and the other one has low priority
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             // Set the intent that will fire when the user taps the notification
             .setContentIntent(pendingIntent)
-            .setAutoCancel(true)            //removes the notification  when the user taps it
+            //removes the notification  when the user taps it
+            .setAutoCancel(true)
+            .addAction(R.drawable.ic_baseline_access_alarm_24,"Snooze",snoozePendingIntent)
             .build()
 
         val notificationManager = NotificationManagerCompat.from(this)
 
         button.setOnClickListener {
-            notificationManager.notify(NOTIFICATION_ID,notification)
+            notificationManager.notify(NOTIFICATION_ID, notification)
         }
 
     }
