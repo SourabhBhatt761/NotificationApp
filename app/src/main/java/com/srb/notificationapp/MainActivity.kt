@@ -27,8 +27,6 @@ class MainActivity : AppCompatActivity() {
 
         val button = findViewById<Button>(R.id.button)
 
-        createNotificationChannel()
-
 //===================used if there's no button============================================//
 
                                 /*Explicit Intent*/
@@ -58,7 +56,9 @@ class MainActivity : AppCompatActivity() {
 
 //====================================================================================================//
 
-
+        createNotificationChannel()
+ 
+ 
         val notificationManager = NotificationManagerCompat.from(this)
 
         button.setOnClickListener {
