@@ -14,22 +14,30 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.srb.notificationapp.databinding.ActivityMainBinding
 
+
+/**
+ * New code has been written to Notification Activity
+ * Refer that for study and changes
+ * Thanks :)
+ * */
 class MainActivity : AppCompatActivity() {
 
     private val CHANNEL_ID = "channelId"
     private val CHANNEL_Name = "channelName"
     private val ACTION_SNOOZE = "com.srb.notificationapp.ACTION_SNOOZE"
+    private lateinit var binding: ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        val button = findViewById<Button>(R.id.button)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
 //===================used if there's no button============================================//
 
-                                /*Explicit Intent*/
+        /*Explicit Intent*/
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -37,13 +45,13 @@ class MainActivity : AppCompatActivity() {
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
 
-                                /*Implicit Intent*/
+        /*Implicit Intent*/
         val iIntent = Intent().apply {
             action = Intent.ACTION_VIEW
-            data  = Uri.parse("https://www.google.com")
+            data = Uri.parse("https://www.google.com")
 
         }
-        val pI = PendingIntent.getActivity(this,1,iIntent,0)
+        val pI = PendingIntent.getActivity(this, 1, iIntent, 0)
 
 
 //===================used to show buttons in notification==================================//
@@ -57,51 +65,46 @@ class MainActivity : AppCompatActivity() {
 //====================================================================================================//
 
         createNotificationChannel()
- 
- 
+
+
         val notificationManager = NotificationManagerCompat.from(this)
 
-        button.setOnClickListener {
-            notificationManager.notify(1, notification(pI))
-        }
-
-        findViewById<Button>(R.id.button2).setOnClickListener {
-            notificationManager.notify(2,notificationWithButton(pI))
-        }
-
-        findViewById<Button>(R.id.button3).setOnClickListener {
-            notificationManager.notify(3,headsUpNotification())
-        }
+//        binding.button.setOnClickListener {
+//            notificationManager.notify(1, notification(pI))
+//        }
+//
+//        binding.button2.setOnClickListener {
+//            notificationManager.notify(2, notificationWithButton(pI))
+//        }
+//
+//        binding.button3.setOnClickListener {
+//            notificationManager.notify(3, headsUpNotification())
+//        }
 
     }
-
-
 
 
     //to register the notification
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                CHANNEL_Name,
-                NotificationManager.IMPORTANCE_DEFAULT
-            ).apply {
-                description = "hello there people"
-                enableVibration(true)
-                lightColor = Color.GREEN
-                enableLights(true)
-            }
-
-            // Register the channel with the system
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.createNotificationChannel(channel)
+        val channel = NotificationChannel(
+            CHANNEL_ID,
+            CHANNEL_Name,
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            description = "hello there people"
+            enableVibration(true)
+            lightColor = Color.GREEN
+            enableLights(true)
         }
+
+        // Register the channel with the system
+        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        manager.createNotificationChannel(channel)
     }
 
 
-
-    private fun notification(pI : PendingIntent) : Notification{
-       return NotificationCompat.Builder(this, CHANNEL_ID)
+    private fun notification(pI: PendingIntent): Notification {
+        return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Example")
             //text will be displayed only of one line ,if setStyle is there this won't be shown
             .setContentText("sample text")
@@ -121,7 +124,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun notificationWithButton(pI : PendingIntent) : Notification {
+    private fun notificationWithButton(pI: PendingIntent): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentText("sample text")
             .setContentTitle("notificationWithButton")

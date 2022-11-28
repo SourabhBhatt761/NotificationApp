@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">NotificationApp</string>
+    <string name="heads_up">Heads up</string>
+    <string name="notification_n_with_button">Notification \n with button</string>
+    <string name="simple_n_notification">Simple \n notification</string>
+    <string name="open_main_activity">open main activity</string>
 </resources>
