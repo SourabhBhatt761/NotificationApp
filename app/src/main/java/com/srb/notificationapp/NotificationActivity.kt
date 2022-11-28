@@ -9,15 +9,18 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.srb.notificationapp.Constants.ACTION_SNOOZE
+import com.srb.notificationapp.Constants.CHANNEL_ID
+import com.srb.notificationapp.Constants.CHANNEL_Name
 import com.srb.notificationapp.databinding.ActivityNotificationBinding
 
 class NotificationActivity : AppCompatActivity() {
 
-    private val CHANNEL_ID = "srb_Id"
-    private val CHANNEL_Name = "Naughty_Test"
     private lateinit var binding: ActivityNotificationBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +61,18 @@ class NotificationActivity : AppCompatActivity() {
             notificationManager.notify(3, showNotificationWhichHasPendingIntent(p2))
         }
 
+
+        /*Broadcasting intent*/
+        val intent3 = Intent(this,MyBroadcastReceiver::class.java).apply {
+            action = ACTION_SNOOZE
+            putExtra(CHANNEL_ID, CHANNEL_Name)
+        }
+
+        val p3  = PendingIntent.getBroadcast(this,113,intent3,PendingIntent.FLAG_IMMUTABLE)
+        binding.button4.setOnClickListener {
+            notificationManager.notify(4,showNotificationWhichHasPendingIntent(p3))
+        }
+
     }
 
     //to register the notification
@@ -65,10 +80,10 @@ class NotificationActivity : AppCompatActivity() {
         val channel = NotificationChannel(
             CHANNEL_ID,
             CHANNEL_Name,
-//            NotificationManager.IMPORTANCE_DEFAULT
-            NotificationManager.IMPORTANCE_HIGH
+            NotificationManager.IMPORTANCE_DEFAULT
+//            NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            description = "first notification test"
+            description = "my notification channel description"
             enableVibration(true)
             lightColor = Color.GREEN
             enableLights(true)

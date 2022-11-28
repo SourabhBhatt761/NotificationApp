@@ -19,6 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity"/>
+        <receiver android:name=".MyBroadcastReceiver"
+            android:exported="false"/>
     </application>
 
 </manifest>
